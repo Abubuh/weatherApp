@@ -2,19 +2,33 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import cloudIcon from "../assets/cloud-icon.png"
 import sadIcon from "../assets/sad-icon.webp"
+import sunnyIcon from "../assets/sunny-icon.png"
+import rainIcon from "../assets/rain-icon.png"
+import thunderIcon from "../assets/thunderstorm-icon.png"
+import drizzleIcon from "../assets/drizzle-icon.png"
+import snowIcon from "../assets/snow-icon.png"
 import windIcon from "../assets/wind-icon.png"
 import humidityIcon from "../assets/humidity-icon.png"
 
+const WEATHER_VALUES_WITH_ICONS = {
+  'Clouds' : cloudIcon,
+  'Clear' : sunnyIcon,
+  'Rain' : rainIcon,
+  'Thunderstorm' : thunderIcon,
+  'Drizzle' : drizzleIcon,
+  'Snow' : snowIcon
+}
+
 const CityWeather = () => {
   const cityOnUrl = useParams()
-  const [newCity, setNewCity] = useState(cityOnUrl)
+  const [newCity, setNewCity] = useState(cityOnUrl.city)
   const [cityData, setCityData] = useState({})
   const navigate = useNavigate()
   const handleSearchInput = (event) => {
     const inputValue = event.target.value
     setNewCity(inputValue)
   }
-  
+  const weatherFiltered = cityData?.weather?.[0].main
   const redirectToCityUrl = () => {
     navigate(`/city/${newCity}`)
   }
@@ -41,8 +55,8 @@ const CityWeather = () => {
       Object.values(cityData).length > 4 ?
       <section className="grid grid-cols-5 grid-flow-col w-11/12 mx-auto">
       <div className=" mx-auto text-center text-white text-5xl font-semibold col-span-3 ">
-          <img src={cloudIcon} alt="" className="absolute mx-auto w-[24%]"/>
-          <div className="text-black mt-[44%] mb-[35%] relative z-10">
+          <img src={WEATHER_VALUES_WITH_ICONS[weatherFiltered]} alt="" className="absolute mx-auto w-[24%] "/>
+          <div className="text-black mt-[40%] mb-[35%] relative z-10">
             <p>{Math.round(cityData.main.temp - 273.15)}°C</p>
             <p>{cityData.name}</p>
           </div>
@@ -73,7 +87,7 @@ const CityWeather = () => {
     </section> : 
     <section className="h-[60vh] "> 
     <img src={sadIcon} alt="" className="w-[27%] mx-auto mb-10"/>
-      <p className="text-white text-center text-6xl font-semibold">We didn't found your city! :( </p>
+      <p className="text-white text-center text-6xl font-semibold">We didn&apos;t found your city! :( </p>
     </section>
   }
     </>
